@@ -1,144 +1,66 @@
 #include <stdio.h>
-#define MAX_VECTOR_SIZE 50
-#define STOP_VALUE 0
+#include <string.h>
+#define MAX_LEN 200
 
-int concat_begin(const int first[], int size, const int second[], int size2, int dest[], int size3);
-int concat_end(const int first[], int size, const int second[], int size2, int dest[], int size3);
-int concat_zip(const int first[], int size, const int second[], int size2, int dest[], int size3);
-int read_vector(int vec[], int size, int stop_value);
-void display_vector(const int vec[], int size);
+int add(const char* number1, const char* number2, char* result, int size);
+int validate(const char * number);
+
+void find_new_line(char *l);
 
 int main() {
-    int vector1[MAX_VECTOR_SIZE], vector2[MAX_VECTOR_SIZE];
-    int vector_concat_begin[MAX_VECTOR_SIZE], vector_concat_end[MAX_VECTOR_SIZE], vector_concat_zip[MAX_VECTOR_SIZE];
-    printf("Podaj pierwszy wektor: ");
-    int size1 = read_vector(vector1, MAX_VECTOR_SIZE, STOP_VALUE);
-    if (size1 == 0) {
-        printf("Not enough data available\n");
-        return 2;
-    }
-    if (size1 == -2) {
-        printf("Incorrect input\n");
+    char n1[MAX_LEN + 1], n2[MAX_LEN + 1], _add[2 * MAX_LEN];
+    printf("Podaj pierwsza liczbe: ");
+    if (fgets(n1, MAX_LEN, stdin) == NULL) {
         return 1;
     }
-    while (getchar() != '\n');
-    printf("Podaj drugi wektor: ");
-    int size2 = read_vector(vector2, MAX_VECTOR_SIZE, STOP_VALUE);
-    if (size2 == 0) {
-        printf("Not enough data available\n");
-        return 2;
-    }
-    if (size2 == -2) {
-        printf("Incorrect input\n");
+    find_new_line(n1);
+    printf("Podaj druga liczbe: ");
+    if (fgets(n2, MAX_LEN, stdin) == NULL) {
         return 1;
     }
-    while (getchar() != '\n');
-    display_vector(vector1, size1);
-    display_vector(vector2, size2);
-    int size_concat_begin = concat_begin(vector1, size1, vector2, size2, vector_concat_begin, MAX_VECTOR_SIZE);
-    if (size_concat_begin == -1) {
-        printf("Incorrect input\n");
-        return 1;
-    }
-    if (size_concat_begin == -2) {
-        printf("Output buffer is too small\n");
-        return 0;
-    }
-    display_vector(vector_concat_begin, size_concat_begin);
-    int size_concat_end = concat_end(vector1, size1, vector2, size2, vector_concat_end, MAX_VECTOR_SIZE);
-    if (size_concat_end == -1) {
-        printf("Incorrect input\n");
-        return 1;
-    }
-    if (size_concat_end == -2) {
-        printf("Output buffer is too small\n");
-        return 0;
-    }
-    display_vector(vector_concat_end, size_concat_end);
-    int size_concat_zip = concat_zip(vector1, size1, vector2, size2, vector_concat_zip, MAX_VECTOR_SIZE);
-    if (size_concat_zip == -1) {
-        printf("Incorrect input\n");
-        return 1;
-    }
-    if (size_concat_zip == -2) {
-        printf("Output buffer is too small\n");
-        return 0;
-    }
-    display_vector(vector_concat_zip, size_concat_zip);
+    find_new_line(n2);
+
+    int _res = add(n1, n2, _add, MAX_LEN);
+    if (_res == 1) {}
+    printf("Add: %s\n", _add);
 
     return 0;
 }
 
-int concat_zip(const int first[], int size, const int second[], int size2, int dest[], int size3) {
-    if (size <= 0 || size2 <= 0 || size3 <= 0) return -1;
-    if (size + size2 > size3) {
-        return -2;
+int add(const char* number1, const char* number2, char* result, int size) {
+    unsigned long long l1 = strlen(number1) - 1;
+    unsigned long long l2 = strlen(number2) - 1;
+    if (size <= 0) return 1;
+    char sum[2 * MAX_LEN];
+    int sgn1 = *number1 == '-' ? -1 : 1, sgn2 = *number2 == '-' ? -1 : 0;
+    int carry = 0, i = 0;
+    while (l1 > 0 && l2 > 0) {
+        int _sum = sgn1*(int)*(number1 - 1 + l1--) + sgn2*(int)*(number2 - 1 + l2--) + carry;
+        carry = _sum % 10;
+        _sum /= 10;
+        *(sum + i++) = (char)carry;
+        *(sum + i++) = (char)_sum;
+        l1--;l2--;
     }
-    int i1 = 0, i2 = 0, i3 = 0;
-    while (i1 < size && i2 < size2) {
-        *(dest + i3++) = *(first + i1++);
-        *(dest + i3++) = *(second + i2++);
+    if (strlen(sum) > size) return 2;
+    for (int j = 0; j < i; j++) {
+        *(result + j) = *(sum + i - j);
     }
-
-    while (i1 < size) {
-        *(dest + i3++) = *(first + i1++);
-    }
-
-    while (i2 < size2) {
-        *(dest + i3++) = *(second + i2++);
-    }
-
-    return i3;
+    return 0;
 }
 
-int concat_end(const int first[], int size, const int second[], int size2, int dest[], int size3) {
-    if (size <= 0 || size2 <= 0 || size3 <= 0) return -1;
-    if (size + size2 > size3) {
-        return -2;
+void find_new_line(char *l) {
+    int new_line = 0;
+    while (*l != '\0') {
+        if (*l == '\n') {
+            *l = '\0';
+            new_line = 1;
+            break;
+        }
+        l++;
     }
-    int i1 = 0, i2 = 0, i3 = 0;
-    while (i2 < size2) {
-        *(dest + i3++) = *(second + i2++);
+    if (!new_line) {
+        int _char;
+        while ((_char = getchar()) != '\n' || _char != '\0');
     }
-    while (i1 < size) {
-        *(dest + i3++) = *(first + i1++);
-    }
-
-    return i3;
 }
-
-int concat_begin(const int first[], int size, const int second[], int size2, int dest[], int size3) {
-    if (size <= 0 || size2 <= 0 || size3 <= 0) return -1;
-    if (size + size2 > size3) {
-        return -2;
-    }
-    int i1 = 0, i2 = 0, i3 = 0;
-    while (i1 < size) {
-        *(dest + i3++) = *(first + i1++);
-    }
-    while (i2 < size2) {
-        *(dest + i3++) = *(second + i2++);
-    }
-    return i3;
-}
-
-int read_vector(int vec[], int size, int stop_value) {
-    if (size <= 0) return -1;
-    for (int i = 0; i < size; i++) {
-        int input = 0;
-        int n = scanf("%d", &input);
-        if (!n) return -2;
-        if (input == stop_value) return i;
-        *(vec + i) = input;
-    }
-    return size;
-}
-
-void display_vector(const int vec[], int size) {
-    if (size <= 0) return;
-    for (int i = 0; i < size; i++) {
-        printf("%d ", *(vec + i));
-    }
-    printf("\n");
-}
-
