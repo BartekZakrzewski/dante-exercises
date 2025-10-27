@@ -1,60 +1,93 @@
 #include <stdio.h>
-#define SIZE_A 10
-#define SIZE_B 2
+#define MAX 5
 
-int A[SIZE_A][SIZE_A], B[SIZE_B][SIZE_B];
-int check_matrix(int A[SIZE_A][SIZE_A], int B[SIZE_B][SIZE_B], int x, int y);
+char names[MAX][201], start[MAX][10], end[MAX][10];
+char sentences[MAX][300];
+
+char* create_sentence(const char *name,  int year_begin, int year_end, char *output, unsigned int size);
+int sort(char input[][201], int size);
 
 int main() {
-    int _res[(SIZE_A - 1) * (SIZE_A - 1)][2];
-    printf("Podaj liczby:\n");
-    for (int i = 0; i < SIZE_A; i++) {
-        for (int j = 0; j < SIZE_A; j++) {
-            int n = scanf("%d", (*(A + i) + j));
-            if (n != 1) {
+    int count = 0;
+    printf("Podaj imiona:\n");
+    for (int i = 0; i < MAX; i++) {
+        if (fgets(*(names + i), 31, stdin) == NULL) {
+            return - 1;
+        }
+        if (*(*(names + i)) == '\n') {
+            break;
+        }
+        char *l = *(names + i);
+        int new_line = 0;
+        while (*l != '0') {
+            if (*l == '\n') {
+                new_line = 1;
+                *l = '\0';
+            }
+            l++;
+        }
+        if (!new_line) {
+            int _char;
+            while ((_char = getchar()) != '\n' && _char != EOF);
+        }
+        count++;
+    }
+    count = count > MAX ? MAX : count;
+    printf("Podaj daty:\n");
+    for (int i = 0; i < count; i++) {
+        if (fgets(*(start + i), 6, stdin) == NULL) {
+            return - 1;
+        }
+        if (*(*(start + i)) == '\n') {
+            if (i < count - 1) {
                 printf("Incorrect input\n");
                 return 1;
             }
+            break;
+        }
+        char *l = *(start + i);
+        int new_line = 0;
+        while (*l != '0') {
+            if (*l == '\n') {
+                new_line = 1;
+                *l = '\0';
+            }
+            l++;
+        }
+        if (!new_line) {
+            int _char;
+            while ((_char = getchar()) != '\n' && _char != EOF);
         }
     }
-    printf("Podaj liczby:\n");
-    for (int i = 0; i < SIZE_B; i++) {
-        for (int j = 0; j < SIZE_B; j++) {
-            int n = scanf("%d", (*(B + i) + j));
-            if (n != 1) {
+    printf("Podaj daty 2:\n");
+    for (int i = 0; i < count; i++) {
+        if (fgets(*(end + i), 6, stdin) == NULL) {
+            return - 1;
+        }
+        if (*(*(end + i)) == '\n') {
+            if (i < count - 1) {
                 printf("Incorrect input\n");
                 return 1;
             }
+            break;
         }
-    }
-    // printf("\nB:\n%d %d\n%d %d\n:B\n", *(*(B + 0) + 0), *(*(B + 0) + 1), *(*(B + 1) + 0), *(*(B + 1) + 1));
-    int res = 0, _index = 0;
-    for (int i = 0; i < SIZE_A - SIZE_B + 1; i++) {
-        for (int j = 0; j < SIZE_A - SIZE_B + 1; j++) {
-            // printf("\n%d %d", i, j);
-            if (check_matrix(A, B, i, j)) {
-                // printf(" TRUE\n");
-                res++;
-                _res[_index][0] = j;
-                _res[_index][1] = i;
-                _index++;
+        char *l = *(end + i);
+        int new_line = 0;
+        while (*l != '0') {
+            if (*l == '\n') {
+                new_line = 1;
+                *l = '\0';
             }
+            l++;
+        }
+        if (!new_line) {
+            int _char;
+            while ((_char = getchar()) != '\n' && _char != EOF);
         }
     }
-    // printf("\nB:\n%d %d\n%d %d\n:B\n", *(*(B + 0) + 0), *(*(B + 0) + 1), *(*(B + 1) + 0), *(*(B + 1) + 1));
-
-    printf("%d\n", res);
-    for (int i = 0; i < _index; i++) {
-        printf("%d %d\n", _res[i][0], _res[i][1]);
+    for (int i = 0; i < count; i++) {
+        create_sentence(*(names + i), (int)*(start + i), (int)*(end + i), *(sentences + i), 400);
     }
 
     return 0;
-}
-
-int check_matrix(int A[SIZE_A][SIZE_A], int B[SIZE_B][SIZE_B], int x, int y) {
-    // printf("\n%d %d\n%d %d\n%d %d\n", x, y, *(*(A + x) + y), *(*(A + x + 1) + y), *(*(A + x) + y + 1), *(*(A + x + 1) + y + 1));
-    return (*(*(A + x) + y) == *(*(B + 0) + 0)
-        && *(*(A + x + 1) + y) == *(*(B + 1) + 0)
-        && *(*(A + x) + y + 1) == *(*(B + 0) + 1)
-        && *(*(A + x + 1) + y + 1) == *(*(B + 1) + 1));
 }
