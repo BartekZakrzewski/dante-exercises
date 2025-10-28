@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-// char* lowerCase(char* str);
 // int str_cmp(char *s1, char *s2);
+int cmp(const void*a, const void*b);
 int sort_alphabetically(char tab[]);
 
 int main() {
@@ -56,19 +57,25 @@ int sort_alphabetically(char tab[]) {
         _tab++;
     }
     n_words++;
+    int n = sizeof(words) / sizeof(words[0]);
+    qsort(words, n, sizeof(words[0]), cmp);
     // printf("%s %d\n", *(words + n_words - 1), n_words);
-    for (int i = 0; i < n_words - 1; i++) {
-        for (int j = 0; j < n_words - i - 1; j++) {
-            if (strcmp(*(words + j), *(words + j + 1)) > 0) {
-                char temp[1001];
-                strcpy(temp, *(words + j));
-                strcpy(*(words + j), *(words + j + 1));
-                strcpy(*(words + j + 1), temp);
-            }
-        }
-    }
-    int len = 0;
+    // int same = 0;
+    // for (int i = 0; i < n_words - 1; i++) {
+    //     for (int j = 0; j < n_words - i - 1; j++) {
+    //         // if (*(words + j) == *(words + j + 1)) {
+    //         //     same = 1;
+    //         // }
+    //         if (strcmp(*(words + j), *(words + j + 1)) > 0) {
+    //             char temp[1001];
+    //             strcpy(temp, *(words + j));
+    //             strcpy(*(words + j), *(words + j + 1));
+    //             strcpy(*(words + j + 1), temp);
+    //         }
+    //     }
+    // }
 
+    int len = 0;
     for (int i = 0; i < n_words; i++) {
         for (int j = 0; j < (int)strlen(*(words + i)); j++) {
             *(tab + len) = *(*(words + i) + j);
@@ -82,12 +89,16 @@ int sort_alphabetically(char tab[]) {
     return 0;
 }
 
+int cmp(const void*a, const void*b) {
+    return strcmp(*(const char**)a, *(const char**)b);
+}
+
 // int str_cmp(char *s1, char *s2) {
-//     char *_s1 = tolower(s1);
-//     char *_s2 = tolower(s2);
-//
-// }
-//
-// char* lowerCase(char* s) {
-//
+//     char *_s1, *_s2;
+//     strcpy(_s1, s1);
+//     strcpy(_s2, s2);
+//     if (_s1 && _s2) {
+//         return strcmp(_s1, _s2);
+//     }
+//     return 0;
 // }
