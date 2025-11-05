@@ -1,12 +1,10 @@
 #include <stdio.h>
 
 int main() {
-    double sum = 0;
-    int n = 1;
-    while (n*(n + 1) <= 10000) {
-        sum += (double)1/(double)(n*(n + 1)); n++;
+    int i = 0;
+    while (i <= 100) {
+        printf("%d ", i++);
     }
-    printf("%d %.4f\n", n-1, sum);
 
     return 0;
 }
