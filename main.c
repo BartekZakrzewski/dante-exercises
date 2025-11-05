@@ -1,25 +1,25 @@
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int main() {
-    int n;
-    printf("Enter a number: ");
-    int e = scanf("%d", &n);
-    if (!e) {
-        printf("Incorrect input\n");
-        return 1;
-    }
-    if (n < 2) {
-        printf("NO\n");
-        return 0;
-    }
-    for (int i = 2; i <= sqrt(n); i++) {
-        if (n % i == 0) {
-            printf("NO\n");
+    srand(time(NULL));
+    int target = rand() % 101;
+    int input;
+    for (int i = 0; i < 10; i++) {
+        printf("Zgadnij: ");
+        scanf("%d", &input);
+        if (input == target) {
+            printf("wygrales\n");
             return 0;
         }
+
+        if (input < target) {
+            printf("za malo\n");
+        } else {
+            printf("za duzo\n");
+        }
     }
-    printf("YES\n");
+    printf("przegrales\n");
     return 0;
 }
